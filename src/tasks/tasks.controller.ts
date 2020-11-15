@@ -3,6 +3,7 @@ import { TasksService } from './tasks.service';
 import { Task, TaskStatus } from './tasks.model';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTaskFilterDto } from './dto/get-task-filter.dto';
+import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipe';
 
 @Controller('tasks')
 export class TasksController {
@@ -10,7 +11,7 @@ export class TasksController {
 
     @Get()
     // Thay doi GetAll thanh Get de truy van tim kiem --Them filter
-    getTasks(@Query() filterDto: GetTaskFilterDto): Task[]{
+    getTasks(@Query(ValidationPipe) filterDto: GetTaskFilterDto): Task[]{
         if(Object.keys(filterDto).length){
             return this.tasksService.getTaskWithFilters(filterDto)
         }
@@ -38,7 +39,7 @@ export class TasksController {
     @Patch('/:id/status')
     updateTaskStatus(
         @Param('id') id: string,
-        @Body('status') status: TaskStatus
+        @Body('status', TaskStatusValidationPipe) status: TaskStatus // validate status bang Pipe
     ): Task{
         return this.tasksService.updateStatusTask(id, status)
     }
