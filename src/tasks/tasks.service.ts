@@ -21,7 +21,7 @@ export class TasksService { //Se duoc chinh sua va thay the bang Entity
     //     }
 
     //     if(search){
-    //         tasks = tasks.filter(task => 
+    //         tasks = tasks.filter(task => `
     //             task.title.includes(search)||
     //             task.description.includes(search))
     //     }
