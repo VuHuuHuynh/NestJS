@@ -13,9 +13,9 @@ export class TasksService { //Se duoc chinh sua va thay the bang Entity
         private taskRepository:TaskRepository,
     ){}
 
-    // getAllTasks(): Task[]{
-    //     return this.tasks
-    // }
+    async getTasks(filterDto: GetTaskFilterDto):Promise<Task[]>{
+        return this.taskRepository.getTasks(filterDto)
+    }
 
     // getTaskWithFilters(filterDto: GetTaskFilterDto): Task[]{
     //     // Xu ly logic search get by filter
@@ -47,22 +47,25 @@ export class TasksService { //Se duoc chinh sua va thay the bang Entity
     async createTask(createTaskDto: CreateTaskDto):Promise<Task>{
         return this.taskRepository.createTask(createTaskDto);
     }
-    // createTask(createTaskDto: CreateTaskDto){
-    //     const task:Task = {
-    //         id: uuid(),
-    //         title,
-    //         description,
-    //         status: TaskStatus.OPEN,
-    //     }
-    //     this.tasks.push(task)
-    //     return task
-    // }
 
+    async deleteTask(id: number): Promise<void>{
+        const result = await this.taskRepository.delete(id)
+
+        if (result.affected===0){
+            throw new NotFoundException(`Task with ID '${id}'not found`)
+        }
+    }
     // deleteTask(id: String): void{
     //     const found = this.getTaskByID(id) //Error handle: Dieu kien deletask,dung chung Pipe IsNotEmpty
     //     this.tasks = this.tasks.filter(task => task.id !== found.id) 
     // }
 
+    async updateStatusTask(id: number, status: TaskStatus): Promise<Task>{
+        const task = await this.getTaskByID(id)
+        task.status = status
+        await task.save()
+        return task
+    }
     // updateStatusTask(id: string, status: TaskStatus): Task{
     //    const task = this.getTaskByID(id)
     //    task.status = status
